@@ -1,12 +1,7 @@
 /* eslint-disable quotes */
 const gameBoard = (() => {
-  // 3x3 matrix filled with undefined
-  // const board = new Array(3).fill().map(() => new Array(3).fill());
-  const board = [
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
-  ];
+  // 3x3 matrix filled with -1
+  const board = new Array(3).fill().map(() => new Array(3).fill(-1));
 
   return {
     board,
@@ -26,8 +21,3 @@ const gameLogic = (() => {
     clearBoard,
   };
 })();
-
-console.log(gameBoard.board);
-gameLogic.clearBoard(gameBoard.board);
-
-console.log(gameBoard.board);
