@@ -1,4 +1,15 @@
 /* eslint-disable quotes */
+const makePlayer = (name, marker) => {
+  const choseCell = (row, column, board) => {
+    // check if cell's already marked
+    if (board[row][column] !== -1) {
+      return board[row][column];
+    }
+  };
+
+  return { name, marker, choseCell };
+};
+
 const gameBoard = (() => {
   // 3x3 matrix filled with -1
   const board = new Array(3).fill().map(() => new Array(3).fill(-1));
