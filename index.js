@@ -15,3 +15,13 @@ const gameBoard = (() => {
     clearBoard,
   };
 })();
+
+const gameLogic = ((board) => {
+  const resetGame = () => {
+    board.clearBoard();
+  };
+
+  return {
+    resetGame,
+  };
+})(gameBoard);
