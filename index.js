@@ -29,8 +29,15 @@ const gameBoard = (() => {
 
   const getBoardMatrix = () => board;
 
-  const updateBoard = () => {
-    console.table(board);
+  const displayBoard = () => {
+    const cells = document.querySelectorAll('.cell');
+    board.forEach((row, rowIndex) => {
+      row.forEach((col, colIndex) => {
+        const flatIndex = rowIndex * rowLength + colIndex;
+        // console.log(cells[flatIndex]);
+        cells[flatIndex].innerHTML = col === -1 ? '' : col;
+      });
+    });
   };
 
   return {
@@ -38,7 +45,7 @@ const gameBoard = (() => {
     columnLength,
     getBoardMatrix,
     clearBoard,
-    updateBoard,
+    displayBoard,
   };
 })();
 
@@ -83,7 +90,7 @@ const gameLogic = ((boardObj) => {
         players[currentPlayer].marker,
         boardObj.getBoardMatrix(),
       );
-      boardObj.updateBoard();
+      boardObj.displayBoard();
       currentPlayer = 1 - currentPlayer;
     }
     // update display

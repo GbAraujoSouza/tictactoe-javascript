@@ -24,6 +24,14 @@
 
 .cell {
   background: lightblue;
+  width: 6.25rem;
+  height: 6.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5.6rem;
+  font-weight: bold;
+  color: #fff;
 }
 
 .cell:nth-child(2n) {
