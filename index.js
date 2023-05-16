@@ -72,7 +72,7 @@ const gameLogic = ((boardObj, domHandler) => {
 
   const getWinningCells = (board) => {
     // return an array of the indexes of winning lines
-  }
+  };
 
   function handleClick(e) {
     const element = e.target;
@@ -127,7 +127,7 @@ const domHandler = (() => {
     if (gameLogic.checkGameOver()) {
       displayWinningPattern(gameLogic.getWinningCells());
     }
-  } 
+  };
 
   cells.forEach((cell) => {
     cell.addEventListener('click', gameLogic.handleClick);
