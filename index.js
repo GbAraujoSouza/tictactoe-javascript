@@ -49,7 +49,7 @@ const gameBoard = (() => {
   };
 })();
 
-const gameLogic = ((boardObj) => {
+const gameLogic = ((boardObj, domHandler) => {
   let currentPlayer = 1;
   const players = [makePlayer('O'), makePlayer('X')];
 
@@ -65,6 +65,14 @@ const gameLogic = ((boardObj) => {
   const markCell = (row, column, marker, board) => {
     board[row][column] = marker; // eslint-disable-line no-param-reassign
   };
+
+  const checkGameOver = () => {
+    // check if game is over
+  };
+
+  const getWinningCells = (board) => {
+    // return an array of the indexes of winning lines
+  }
 
   function handleClick(e) {
     const element = e.target;
@@ -93,20 +101,36 @@ const gameLogic = ((boardObj) => {
       boardObj.displayBoard();
       currentPlayer = 1 - currentPlayer;
     }
-    // update display
   }
 
   return {
     startGame,
     resetGame,
     handleClick,
+    checkGameOver,
+    getWinningCells,
   };
-})(gameBoard);
+})(gameBoard, domHandler); // eslint-disable-line no-use-before-define
 
 const domHandler = (() => {
   // cache DOM elements
   const cells = document.querySelectorAll('.cell');
+
+  const displayWinningPattern = (winningCells) => {
+    winningCells.forEach((cellIndex) => {
+      const cellElement = document.getElementById(`cell-${cellIndex}`);
+      cellElement.classList.add('winning-cell');
+    });
+  };
+
+  const isGameOver = () => {
+    if (gameLogic.checkGameOver()) {
+      displayWinningPattern(gameLogic.getWinningCells());
+    }
+  } 
+
   cells.forEach((cell) => {
     cell.addEventListener('click', gameLogic.handleClick);
+    cell.addEventListener('click', isGameOver);
   });
 })();
