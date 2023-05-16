@@ -39,3 +39,8 @@
 .cell:nth-child(2n) {
   background: #2A88C8;
 }
+
+.winning-cell {
+  background-color: rgb(212, 221, 224);
+  color: #000;
+}
