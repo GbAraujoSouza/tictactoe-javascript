@@ -4,7 +4,7 @@ const makePlayer = (marker) => {
       return false;
     }
     // check if cell's already marked
-    if (board[row][column] === -1) {
+    if (board[row][column] === '') {
       return true;
     }
     return false;
@@ -16,26 +16,15 @@ const makePlayer = (marker) => {
 const gameBoard = (() => {
   const rowLength = 3;
   const columnLength = 3;
-  // 3x3 matrix filled with -1
-  const board = new Array(3).fill().map(() => new Array(3).fill(-1));
-
-  const clearBoard = () => {
-    // fill the board with -1
-    board.forEach((row, rowIndex) => {
-      const resetRow = row.map(() => -1);
-      board[rowIndex] = resetRow;
-    });
-  };
-
-  const getBoardMatrix = () => board;
+  // 3x3 matrix filled with empty string
+  const board = new Array(3).fill().map(() => new Array(3).fill(''));
 
   const displayBoard = () => {
     const cells = document.querySelectorAll('.cell');
     board.forEach((row, rowIndex) => {
       row.forEach((col, colIndex) => {
         const flatIndex = rowIndex * rowLength + colIndex;
-        // console.log(cells[flatIndex]);
-        cells[flatIndex].innerHTML = col === -1 ? '' : col;
+        cells[flatIndex].innerHTML = col === '' ? '' : col;
       });
     });
   };
@@ -60,7 +49,7 @@ const gameBoard = (() => {
   };
 })();
 
-const gameLogic = ((boardObj, domHandler) => {
+const gameLogic = ((boardObj) => {
   let currentPlayer = 1;
   const players = [makePlayer('O'), makePlayer('X')];
 
@@ -77,13 +66,62 @@ const gameLogic = ((boardObj, domHandler) => {
     board[row][column] = marker; // eslint-disable-line no-param-reassign
   };
 
-  const checkGameOver = () => {
-    // check if game is over
-  };
+  const gameOver = (() => {
+    const { rowLength } = boardObj;
+    const boardMatrix = boardObj.getBoardMatrix();
+    const winningCells = [];
 
-  const getWinningCells = (board) => {
-    // return an array of the indexes of winning lines
-  };
+    const checkGameOver = () => {
+      let referenceElement = '';
+      // check lines
+
+      // check columns
+
+      // check diagonals
+      //   check principal diagonal
+      let principalDiagonal = true;
+      [[referenceElement]] = boardMatrix;
+      for (let i = 0; i < boardMatrix.length; i += 1) {
+        winningCells.push(i * rowLength + i);
+        if (!boardMatrix[i][i] || boardMatrix[i][i] !== referenceElement) {
+          principalDiagonal = !principalDiagonal;
+          winningCells.length = 0;
+          break;
+        }
+      }
+
+      //   check secondary diagonal
+      let secondaryDiagonal = true;
+      if (!principalDiagonal) {
+        referenceElement = boardMatrix[0][boardMatrix.length - 1];
+        for (let row = 0; row < boardMatrix.length; row += 1) {
+          const col = boardMatrix.length - row - 1;
+          winningCells.push(row * rowLength + col);
+          if (
+            !boardMatrix[row][col] ||
+            boardMatrix[row][col] !== referenceElement
+          ) {
+            secondaryDiagonal = !secondaryDiagonal;
+            winningCells.length = 0;
+            break;
+          }
+        }
+      }
+
+      if (principalDiagonal || secondaryDiagonal) {
+        console.log('Game over');
+        return true;
+      }
+      return false;
+    };
+
+    const getWinningCells = () => winningCells;
+
+    return {
+      checkGameOver,
+      getWinningCells,
+    };
+  })();
 
   function handleClick(e) {
     const element = e.target;
@@ -118,10 +156,9 @@ const gameLogic = ((boardObj, domHandler) => {
     startGame,
     resetGame,
     handleClick,
-    checkGameOver,
-    getWinningCells,
+    gameOver,
   };
-})(gameBoard, domHandler); // eslint-disable-line no-use-before-define
+})(gameBoard); // eslint-disable-line no-use-before-define
 
 const domHandler = (() => {
   // cache DOM elements
@@ -135,8 +172,8 @@ const domHandler = (() => {
   };
 
   const isGameOver = () => {
-    if (gameLogic.checkGameOver()) {
-      displayWinningPattern(gameLogic.getWinningCells());
+    if (gameLogic.gameOver.checkGameOver()) {
+      displayWinningPattern(gameLogic.gameOver.getWinningCells());
     }
   };
 
