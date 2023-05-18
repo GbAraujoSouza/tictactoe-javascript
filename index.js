@@ -40,6 +40,17 @@ const gameBoard = (() => {
     });
   };
 
+  const clearBoard = () => {
+    // fill the board with empty string
+    board.forEach((row, rowIndex) => {
+      const resetRow = row.map(() => '');
+      board[rowIndex] = resetRow;
+    });
+    displayBoard();
+  };
+
+  const getBoardMatrix = () => board;
+
   return {
     rowLength,
     columnLength,
