@@ -67,32 +67,48 @@ const gameLogic = ((boardObj) => {
   };
 
   const gameOver = (() => {
-    const { rowLength } = boardObj;
+    const { rowLength, columnLength } = boardObj;
     const boardMatrix = boardObj.getBoardMatrix();
     const winningCells = [];
 
     const checkGameOver = () => {
       let referenceElement = '';
       // check lines
+      let lines = true;
+      let principalDiagonal = true;
+      let secondaryDiagonal = true;
+      for (let i = 0; i < rowLength; i += 1) {
+        [referenceElement] = boardMatrix[i];
+        for (let j = 0; j < columnLength; j += 1) {
+          winningCells.push(i * rowLength + j);
+          if (!boardMatrix[i][j] || boardMatrix[i][j] !== referenceElement) {
+            lines = !lines;
+            winningCells.length = 0;
+            break;
+          }
+        }
+      }
 
       // check columns
 
       // check diagonals
       //   check principal diagonal
-      let principalDiagonal = true;
-      [[referenceElement]] = boardMatrix;
-      for (let i = 0; i < boardMatrix.length; i += 1) {
-        winningCells.push(i * rowLength + i);
-        if (!boardMatrix[i][i] || boardMatrix[i][i] !== referenceElement) {
-          principalDiagonal = !principalDiagonal;
-          winningCells.length = 0;
-          break;
+
+      if (!lines) {
+        [[referenceElement]] = boardMatrix;
+        for (let i = 0; i < boardMatrix.length; i += 1) {
+          winningCells.push(i * rowLength + i);
+          if (!boardMatrix[i][i] || boardMatrix[i][i] !== referenceElement) {
+            principalDiagonal = !principalDiagonal;
+            winningCells.length = 0;
+            break;
+          }
         }
       }
 
       //   check secondary diagonal
-      let secondaryDiagonal = true;
-      if (!principalDiagonal) {
+
+      if (!principalDiagonal || !lines) {
         referenceElement = boardMatrix[0][boardMatrix.length - 1];
         for (let row = 0; row < boardMatrix.length; row += 1) {
           const col = boardMatrix.length - row - 1;
@@ -108,7 +124,7 @@ const gameLogic = ((boardObj) => {
         }
       }
 
-      if (principalDiagonal || secondaryDiagonal) {
+      if (principalDiagonal || secondaryDiagonal || lines) {
         console.log('Game over');
         return true;
       }
