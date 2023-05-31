@@ -73,19 +73,26 @@ const gameLogic = ((boardObj) => {
 
     const checkGameOver = () => {
       let referenceElement = '';
-      // check lines
-      let lines = true;
+      let lines = false;
       let principalDiagonal = true;
       let secondaryDiagonal = true;
-      for (let i = 0; i < rowLength; i += 1) {
-        [referenceElement] = boardMatrix[i];
-        for (let j = 0; j < columnLength; j += 1) {
-          winningCells.push(i * rowLength + j);
-          if (!boardMatrix[i][j] || boardMatrix[i][j] !== referenceElement) {
-            lines = !lines;
-            winningCells.length = 0;
-            break;
+
+      // check lines
+      for (let line = 0; line < rowLength; line += 1) {
+        [referenceElement] = boardMatrix[line];
+        let lineIsEqual = true;
+        for (let col = 1; col < columnLength; col += 1) {
+          if (!boardMatrix[line][col] || boardMatrix[line][col] !== referenceElement) {
+            lineIsEqual = false;
           }
+        }
+
+        if (lineIsEqual) {
+          for (let col = 0; col < columnLength; col += 1) {
+            winningCells.push(line * rowLength + col);
+          }
+          lines = true;
+          break;
         }
       }
 
@@ -97,25 +104,29 @@ const gameLogic = ((boardObj) => {
       if (!lines) {
         [[referenceElement]] = boardMatrix;
         for (let i = 0; i < boardMatrix.length; i += 1) {
-          winningCells.push(i * rowLength + i);
+          // winningCells.push(i * rowLength + i);
           if (!boardMatrix[i][i] || boardMatrix[i][i] !== referenceElement) {
-            principalDiagonal = !principalDiagonal;
-            winningCells.length = 0;
+            principalDiagonal = false;
             break;
+          }
+        }
+        if (principalDiagonal) {
+          for (let col = 0; col < columnLength; col += 1) {
+            winningCells.push(col * rowLength + col);
           }
         }
       }
 
       //   check secondary diagonal
 
-      if (!principalDiagonal || !lines) {
+      if (!principalDiagonal || lines) {
         referenceElement = boardMatrix[0][boardMatrix.length - 1];
         for (let row = 0; row < boardMatrix.length; row += 1) {
           const col = boardMatrix.length - row - 1;
           winningCells.push(row * rowLength + col);
           if (
-            !boardMatrix[row][col] ||
-            boardMatrix[row][col] !== referenceElement
+            !boardMatrix[row][col]
+            || boardMatrix[row][col] !== referenceElement
           ) {
             secondaryDiagonal = !secondaryDiagonal;
             winningCells.length = 0;
@@ -189,6 +200,7 @@ const domHandler = (() => {
 
   const isGameOver = () => {
     if (gameLogic.gameOver.checkGameOver()) {
+      console.log(gameLogic.gameOver.getWinningCells());
       displayWinningPattern(gameLogic.gameOver.getWinningCells());
     }
   };
