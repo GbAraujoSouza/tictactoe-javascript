@@ -104,7 +104,6 @@ const gameLogic = ((boardObj) => {
       if (!lines) {
         [[referenceElement]] = boardMatrix;
         for (let i = 0; i < boardMatrix.length; i += 1) {
-          // winningCells.push(i * rowLength + i);
           if (!boardMatrix[i][i] || boardMatrix[i][i] !== referenceElement) {
             principalDiagonal = false;
             break;
@@ -123,14 +122,16 @@ const gameLogic = ((boardObj) => {
         referenceElement = boardMatrix[0][boardMatrix.length - 1];
         for (let row = 0; row < boardMatrix.length; row += 1) {
           const col = boardMatrix.length - row - 1;
-          winningCells.push(row * rowLength + col);
-          if (
-            !boardMatrix[row][col]
-            || boardMatrix[row][col] !== referenceElement
-          ) {
-            secondaryDiagonal = !secondaryDiagonal;
-            winningCells.length = 0;
+          // winningCells.push(row * rowLength + col);
+          if (!boardMatrix[row][col] || boardMatrix[row][col] !== referenceElement) {
+            secondaryDiagonal = false;
             break;
+          }
+        }
+        if (secondaryDiagonal) {
+          for (let row = 0; row < columnLength; row += 1) {
+            const col = boardMatrix.length - row - 1;
+            winningCells.push(row * rowLength + col);
           }
         }
       }
