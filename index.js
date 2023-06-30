@@ -52,6 +52,7 @@ const gameBoard = (() => {
 const gameLogic = ((boardObj) => {
   let currentPlayer = 1;
   const players = [makePlayer('O'), makePlayer('X')];
+  let gameStatus = true;
 
   const startGame = () => {
     currentPlayer = 0;
@@ -161,6 +162,7 @@ const gameLogic = ((boardObj) => {
       }
 
       if (principalDiagonal || secondaryDiagonal || lines || columns) {
+        gameStatus = false;
         console.log('Game over');
         return true;
       }
@@ -191,7 +193,7 @@ const gameLogic = ((boardObj) => {
         selectedRow,
         selectedColumn,
         boardObj.getBoardMatrix(),
-      )
+      ) && gameStatus
     ) {
       markCell(
         selectedRow,
