@@ -74,6 +74,7 @@ const gameLogic = ((boardObj) => {
     const checkGameOver = () => {
       let referenceElement = '';
       let lines = false;
+      let columns = false;
       let principalDiagonal = true;
       let secondaryDiagonal = true;
 
@@ -97,11 +98,34 @@ const gameLogic = ((boardObj) => {
       }
 
       // check columns
+      if (!lines) {
+        for (let col = 0; col < columnLength; col += 1) {
+          const referenceElement = boardMatrix[0][col];
+          let columnIsEqual = true;
+          for (let row = 1; row < rowLength; row += 1) {
+            if (
+              !boardMatrix[row][col] ||
+              boardMatrix[row][col] !== referenceElement
+            ) {
+              columnIsEqual = false;
+              break;
+            }
+          }
+
+          if (columnIsEqual) {
+            for (let row = 0; row < rowLength; row += 1) {
+              winningCells.push(row * rowLength + col);
+            }
+            columns = true;
+            break;
+          }
+        }
+      }
 
       // check diagonals
       //   check principal diagonal
 
-      if (!lines) {
+      if (!lines || !columns) {
         [[referenceElement]] = boardMatrix;
         for (let i = 0; i < boardMatrix.length; i += 1) {
           if (!boardMatrix[i][i] || boardMatrix[i][i] !== referenceElement) {
@@ -118,7 +142,7 @@ const gameLogic = ((boardObj) => {
 
       //   check secondary diagonal
 
-      if (!principalDiagonal || lines) {
+      if (!principalDiagonal || lines || columns) {
         referenceElement = boardMatrix[0][boardMatrix.length - 1];
         for (let row = 0; row < boardMatrix.length; row += 1) {
           const col = boardMatrix.length - row - 1;
@@ -136,7 +160,7 @@ const gameLogic = ((boardObj) => {
         }
       }
 
-      if (principalDiagonal || secondaryDiagonal || lines) {
+      if (principalDiagonal || secondaryDiagonal || lines || columns) {
         console.log('Game over');
         return true;
       }
